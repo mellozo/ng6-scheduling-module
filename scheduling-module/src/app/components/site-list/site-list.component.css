@@ -1,0 +1,16 @@
+
+
+.box {
+    height: 2em;
+    background-color: #444ba5;
+    border: solid 1px black;
+    padding: 10px 20px;
+    display: inline-block;
+
+   
+
+}
+
+.dragging {
+    background: coral;
+}
