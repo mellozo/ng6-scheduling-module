@@ -1,11 +1,19 @@
-<ul *ngFor="let s of SiteList" >
-  <li class="box" 
-    DragDropList
-    (dragStart)="onDragStart($event)" 
-    (dragMove)="onDragMove($event)"
-    (dragEnd)="onDragEnd($event)"  
-  >
-    <app-list-item [Site]="s"></app-list-item>
-  </li>
+<ul  appSortableList
+  (itemSorted)=onItemMoved($event)>
+ <li  class="box" Draggable>
+ frank
 
+</li>
+<li  class="box" Draggable>
+ sam
+
+</li>
+<li  class="box" Draggable>
+ alice
+
+</li>
 </ul>
+ 
+    <!-- (dragStart)="onDragStart($event)" 
+    (dragMove)="onDragMove($event)"
+    (dragEnd)="onDragEnd($event)"   -->

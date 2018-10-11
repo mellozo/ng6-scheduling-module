@@ -1,17 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DragDropListDirective } from './drag-drop-list.directive';
+import { DraggableDirective } from './draggable.directive';
+import { SortableListDirective } from './sortable-list.directive';
+
 
 @NgModule({
   imports: [
     CommonModule
   ],
-  declarations: [DragDropListDirective],
-  exports: [DragDropListDirective]
+  declarations: [DraggableDirective, SortableListDirective],
+  exports: [DraggableDirective, SortableListDirective]
 })
 export class DragDropModule { 
-
-
-
 
 }

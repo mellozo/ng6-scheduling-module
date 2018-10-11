@@ -5,3 +5,8 @@
     cursor: move;
     user-select: none;
 }
+
+
+.draggable:not(.dragging) {
+    transition: transform 500ms ease-in-out;
+  }

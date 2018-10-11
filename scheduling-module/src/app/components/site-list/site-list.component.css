@@ -1,5 +1,14 @@
 
 
+ul {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+
+
+
 .box {
     height: 2em;
     background-color: #444ba5;
