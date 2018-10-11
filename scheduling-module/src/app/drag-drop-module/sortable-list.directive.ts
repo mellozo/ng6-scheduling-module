@@ -49,17 +49,17 @@ export class SortableListDirective implements AfterContentInit {
     }
 
     moveForward(index: number) {
+     
       // swap coords of client rects
       const items = this.draggableItems.toArray();
+      if( index >= items.length-1 )
+      return;
       const source = items[index];
       const dest = items[index+1];
 
       source.position = {y: ( dest.startPosition.y - source.startPosition.y ), x: 0} ;
       dest.position = {y: -(dest.startPosition.y - source.startPosition.y), x: 0} ;
-     
-     
-
-
+ 
       // notify underlying model
       this.itemSorted.next({oldIndex:index, newIndex:index+1})
     }
