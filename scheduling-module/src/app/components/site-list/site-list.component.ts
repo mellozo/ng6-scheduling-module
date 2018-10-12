@@ -11,7 +11,7 @@ import { DraggableDirective } from './../../drag-drop-module/draggable.directive
 })
 export class SiteListComponent implements OnInit {
 
-  SiteList =[{Name:'Frank'}, {Name: 'Joe'}, {Name:'Mel'}];
+  SiteList: SiteModel[];// =[{Name:'Frank'}, {Name: 'Joe'}, {Name:'Mel'}];
   startIndex: number;
   currentIndex: number;
   startItem: DraggableDirective;
@@ -22,16 +22,16 @@ export class SiteListComponent implements OnInit {
   constructor(private svcData: DataService) { }
   
   ngOnInit() {
-    //this.svcData.getSites("22243")
-      // .subscribe( 
-      //   (meldata: SiteModel[]) => {
-      //     this.SiteList = meldata;
-      // },
-      // errorInconceivable => {
-      //   console.log(errorInconceivable)
-      // }
+    this.svcData.getSites("22243")
+      .subscribe( 
+        (meldata: SiteModel[]) => {
+          this.SiteList = meldata;
+      },
+      errorInconceivable => {
+        console.log(errorInconceivable)
+      }
       
-      // )
+      )
   }
 
   onDragStart( event: {draggable: DraggableDirective, index: number} ) {
@@ -54,48 +54,35 @@ export class SiteListComponent implements OnInit {
   onDragEnd( event: {el: ElementRef} ) {
     this.dragOver = true;
     console.log("drag end")
-    this.updateView();
+ 
     this.updateModel();
     this.clear();
-  }
-
-
-
-  updateView() {
-    const source = this.startItem;
-    const dest = this.currentItem;
-    console.log( ` start y is ${source.startPosition.y} end y is ${dest.startPosition.y}`)
-    const sourceStartPosition = source.startPosition;
-    const destStartPosition = dest.startPosition;
-    source.startPosition = destStartPosition;
-    dest.startPosition = destStartPosition;
-
-    if( source.startPosition.y > dest.startPosition.y)
-      this.moveBack(source, dest);
-    else
-      this.moveForward(source, dest);
-   
-  }
-
-  moveForward(source, dest) {
-    console.log('moving forward')
-    source.movePosition = {y: ( dest.startPosition.y - source.startPosition.y ), x: 0} ;
-    
-    dest.movePosition = {y: -(dest.startPosition.y - source.startPosition.y), x: 0} ;
-  }
-
-  moveBack(source, dest) {
-    console.log('moving back')
-    source.movePosition = {y: ( source.startPosition.y -  dest.startPosition.y ), x: 0} ;
-    dest.movePosition = {y: (dest.startPosition.y - source.startPosition.y), x: 0} ;
   }
 
   updateModel() {
     console.log(`before update ${this.SiteList}`)
     const sourceModel = this.SiteList[this.startIndex];
-    const destModel = this.SiteList[this.currentIndex];
-    this.SiteList[this.startIndex] = destModel;
-    this.SiteList[this.currentIndex] = sourceModel;
+    //const destModel = this.SiteList[this.currentIndex];
+   // this.SiteList[this.currentIndex] = sourceModel;
+   // this.SiteList[this.startIndex] = destModel;// swap for now, but 
+    let i: number = 0;
+    let j: number = 0;
+    let reorderedArray: SiteModel[] = [];
+    for ( i; i < this.SiteList.length; i++)
+    {
+       if (i!= this.startIndex )
+       {
+         reorderedArray[j] = this.SiteList[i];
+         j++;
+       }
+       if ( i == this.currentIndex) {
+        reorderedArray[j] = sourceModel;
+        j++
+       }
+    }
+
+    this.SiteList = reorderedArray;
+    
     console.log(`after update ${this.SiteList}`)
   }
 

@@ -45,8 +45,8 @@ export class SortableListDirective  {
       for( index; index < items.length; index++ ) {
         const iterator = index;
         let item = items[index];
-        item.dragStart.subscribe( ()=> this.startDrag() );
-        item.dragEnd.subscribe( (event)=> this.endDrag(iterator,event) )
+        //item.dragStart.subscribe( ()=> this.startDrag() );
+       // item.dragEnd.subscribe( (event)=> this.endDrag(iterator,event) )
       }
     }
 
@@ -68,9 +68,9 @@ export class SortableListDirective  {
     onDragEnd( event: {el: ElementRef} ) {
       this.dragOver = true;
       console.log("drag end")
-      this.updateView();
-      this.updateModel();
-      this.clear();
+     // this.updateView();
+     // this.updateModel();
+      //this.clear();
     }
   
   
