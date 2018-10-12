@@ -1,17 +1,22 @@
-<ul  appSortableList
-  (itemSorted)=onItemMoved($event)>
- <li  class="box" Draggable>
- frank
 
-</li>
-<li  class="box" Draggable>
- sam
 
-</li>
-<li  class="box" Draggable>
- alice
 
-</li>
+<ul 
+  >
+      <li  *ngFor="let mel of SiteList; let i=index" 
+        class="box" 
+        Draggable
+        itemIndex={{i}}
+        (itemTraversed)="onItemTraversed($event)" 
+        (dragStart) = "onDragStart($event)"
+        (dragEnd) = "onDragEnd()"
+        >
+       <app-list-item 
+          [Site]="mel"
+         ></app-list-item>
+
+        </li>
+
 </ul>
  
     <!-- (dragStart)="onDragStart($event)" 

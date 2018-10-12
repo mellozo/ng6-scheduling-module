@@ -1,4 +1,11 @@
-import { Directive, AfterContentInit,ContentChildren, QueryList, Output, forwardRef} from '@angular/core';
+import { Directive, 
+  AfterContentInit,
+  ContentChildren, 
+  ViewChildren, 
+  QueryList, 
+  Output, 
+  ElementRef,
+  forwardRef} from '@angular/core';
 import { DraggableDirective } from './draggable.directive';
 import { Subject } from 'rxjs'
 
@@ -13,59 +20,64 @@ export interface ItemSortedEvent {
 @Directive({
   selector: '[appSortableList]'
 })
-export class SortableListDirective implements AfterContentInit {
+export class SortableListDirective  {
 
-    @ContentChildren(forwardRef(()=> DraggableDirective ))draggableItems: QueryList<DraggableDirective>;
+    @ViewChildren(DraggableDirective )draggableItems: QueryList<DraggableDirective>;
     private clientRects: ClientRect[];
     @Output() itemSorted =new Subject<ItemSortedEvent>();
+    startIndex: number;
+    currentIndex: number;
+    startItem: DraggableDirective;
+    currentItem: DraggableDirective;
+    dragOver: boolean = false;
 
+  
     constructor() { }
 
-    ngAfterContentInit() {
-      console.log(this.draggableItems.length)
+    ngAfterViewInit() {
+   
+      if( ! this.draggableItems)
+      return;
+
       let index = 0;
       const items = this.draggableItems.toArray();
-      for( index; index < this.draggableItems.length; index++ ) {
+      console.log(items.length)
+      for( index; index < items.length; index++ ) {
         const iterator = index;
         let item = items[index];
-        item.dragStart.subscribe( ()=> this.measureClientRects() );
-        item.dragMove.subscribe( (event)=> this.determineDrag(iterator,event) )
+        item.dragStart.subscribe( ()=> this.startDrag() );
+        item.dragEnd.subscribe( (event)=> this.endDrag(iterator,event) )
       }
     }
 
-    measureClientRects() {
-      this.clientRects = this.draggableItems.map( item => item.element.nativeElement.getBoundingClientRect());
+    onDragStart( event: {draggable: DraggableDirective, index: number} ) {
+      this.startItem = event.draggable;
+      this.startIndex = event.index;
+      console.log("got start element")
     }
-
-    determineDrag(index: number, event: PointerEvent) {
-      const currentRect = this.clientRects[index];
-      const pointerY = event.clientY;
-      if( pointerY > currentRect.top)
-        this.moveForward(index);
-      else
-        this.moveBack(index ) 
+  
     
-
-    }
-
-    moveForward(index: number) {
-     
-      // swap coords of client rects
-      const items = this.draggableItems.toArray();
-      if( index >= items.length-1 )
+    onItemTraversed(event:{draggable:DraggableDirective, index: number}) {
+      if (this.dragOver)
       return;
-      const source = items[index];
-      const dest = items[index+1];
-
-      source.position = {y: ( dest.startPosition.y - source.startPosition.y ), x: 0} ;
-      dest.position = {y: -(dest.startPosition.y - source.startPosition.y), x: 0} ;
- 
-      // notify underlying model
-      this.itemSorted.next({oldIndex:index, newIndex:index+1})
+      console.log(`updating index to ${event.index}`)
+      this.currentIndex = event.index;
+      this.currentItem = event.draggable;
     }
-
-    moveBack(index: number){
-      this.itemSorted.next({oldIndex:index, newIndex:index-1})
+  
+    onDragEnd( event: {el: ElementRef} ) {
+      this.dragOver = true;
+      console.log("drag end")
+      this.updateView();
+      this.updateModel();
+      this.clear();
     }
-
+  
+  
+    updateView() {
+      const source = this.startItem;
+      const dest = this.currentItem;
+     // source.position = {y: ( dest.startPosition.y - source.startPosition.y ), x: 0} ;
+      //dest.position = {y: -(dest.startPosition.y - source.startPosition.y), x: 0} ;
+    }
 }
