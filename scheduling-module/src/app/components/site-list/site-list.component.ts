@@ -48,7 +48,7 @@ export class SiteListComponent implements OnInit {
     return;
     console.log(`updating index to ${event.index}`)
     this.currentIndex = event.index;
-    this.currentItem = event.draggable;
+   // this.currentItem = event.draggable;
   }
 
   onDragEnd( event: {el: ElementRef} ) {
@@ -62,24 +62,35 @@ export class SiteListComponent implements OnInit {
   updateModel() {
     console.log(`before update ${this.SiteList}`)
     const sourceModel = this.SiteList[this.startIndex];
-    //const destModel = this.SiteList[this.currentIndex];
-   // this.SiteList[this.currentIndex] = sourceModel;
-   // this.SiteList[this.startIndex] = destModel;// swap for now, but 
+    const destModel = this.SiteList[this.currentIndex];
+
     let i: number = 0;
     let j: number = 0;
     let reorderedArray: SiteModel[] = [];
-    for ( i; i < this.SiteList.length; i++)
-    {
-       if (i!= this.startIndex )
-       {
-         reorderedArray[j] = this.SiteList[i];
-         j++;
-       }
-       if ( i == this.currentIndex) {
-        reorderedArray[j] = sourceModel;
-        j++
-       }
+    /*
+    make a copy of the site list array - remove the start and dest elements;
+    loop thorugh 
+    */
+    const listCopied = this.SiteList.slice();
+    listCopied.splice(this.startIndex, 1) // remove the moving element ( its already stored)
+  
+    
+    for(i; i < this.SiteList.length; i++){
+      if( i != this.currentIndex ) {
+        reorderedArray[i] = listCopied[j];
+        j++;
+      } else if( i == this.currentIndex ) {
+        reorderedArray[i]= sourceModel;
+      } 
+
     }
+
+    /*
+different than the tutorial this was based on, the goal is to change the order, not swap 
+so moving element gets inserted after the drop node 
+
+
+    */
 
     this.SiteList = reorderedArray;
     
